@@ -1,18 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.SUPABASE_ANON_KEY;
-
-const isPlaceholder = (val?: string) => !val || val === 'your_supabase_url' || val === 'your_supabase_anon_key' || val === 'sb_publishable_y8mDLKQOz3ZLy_Jpb6-1Vg_lonFXmzb';
+const supabaseUrl = 'https://aahaltfklfpcddiyztgj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhaGFsdGZrbGZwY2RkaXl6dGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2OTU2ODYsImV4cCI6MjA5NDI3MTY4Nn0.nniWlgZFROpk-cNjKBc3g-JPx7njbicZBPjwAsg6E2g';
 
 export const createClient = (req: any, res: any) => {
-  if (isPlaceholder(supabaseUrl) || isPlaceholder(supabaseKey)) {
-    return null;
-  }
-  
   return createServerClient(
-    supabaseUrl!,
-    supabaseKey!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {
