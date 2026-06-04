@@ -33,14 +33,29 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUP
 
 const isPlaceholder = (val?: string) => !val || val === 'your_supabase_url' || val === 'your_supabase_anon_key' || val === 'sb_publishable_y8mDLKQOz3ZLy_Jpb6-1Vg_lonFXmzb';
 
-const supabase = (!isPlaceholder(supabaseUrl) && !isPlaceholder(supabaseKey)) 
-  ? createClient(supabaseUrl!, supabaseKey!) 
-  : null;
+let supabase: ReturnType<typeof createClient> | null = null;
+let supabaseInitError: string | null = null;
 
-if (supabase) {
-  console.log("Supabase client initialized for persistent storage.");
-} else {
-  console.log("Supabase keys missing. Falling back to local users.json storage.");
+try {
+  if (!isPlaceholder(supabaseUrl) && !isPlaceholder(supabaseKey)) {
+    supabase = createClient(supabaseUrl!, supabaseKey!, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: false,
+        detectSessionInUrl: false
+      }
+    });
+    console.log("✓ Supabase client initialized successfully");
+  } else {
+    const missingVars: string[] = [];
+    if (isPlaceholder(supabaseUrl)) missingVars.push('SUPABASE_URL');
+    if (isPlaceholder(supabaseKey)) missingVars.push('SUPABASE_ANON_KEY');
+    supabaseInitError = `Missing environment variables: ${missingVars.join(', ')}`;
+    console.warn("⚠️ Supabase not configured:", supabaseInitError);
+  }
+} catch (err: any) {
+  supabaseInitError = err.message || 'Unknown initialization error';
+  console.error("✗ Supabase initialization failed:", supabaseInitError);
 }
 
 async function startServer() {
@@ -207,23 +222,47 @@ async function startServer() {
   });
 
   apiRouter.post("/auth/email/login", async (req, res) => {
-    const { email, password } = req.body;
-    const user = await getUserByEmail(email);
-    
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
     try {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
+      console.log("Login attempt received for:", req.body?.email || 'unknown');
+      
+      if (!req.body || !req.body.email || !req.body.password) {
+        console.error("Missing credentials in request body");
+        return res.status(400).json({ error: "Email and password are required" });
       }
-      const { password: _, ...userWithoutPassword } = user;
-      res.json({ user: userWithoutPassword });
-    } catch (err) {
-      console.error("Login error:", err);
-      res.status(500).json({ error: "Error during login" });
+      
+      const { email, password } = req.body;
+      
+      // First check local cache/file storage
+      let user = await getUserByEmail(email);
+      
+      // If not found locally and Supabase is available, the user might exist only in Supabase Auth
+      // In this case, we should fail gracefully with proper error message
+      if (!user) {
+        console.log("User not found in local storage. Note: This app uses local storage for authentication.");
+        return res.status(401).json({ 
+          error: "Invalid credentials. User not found. Please sign up first or check your email." 
+        });
+      }
+
+      try {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+          console.log("Password mismatch for:", email);
+          return res.status(401).json({ error: "Invalid credentials" });
+        }
+        const { password: _, ...userWithoutPassword } = user;
+        console.log("Login successful for:", email);
+        res.json({ user: userWithoutPassword });
+      } catch (bcryptErr: any) {
+        console.error("Bcrypt comparison error:", bcryptErr.message);
+        throw bcryptErr;
+      }
+    } catch (err: any) {
+      console.error("Login handler error:", err.message, err.stack);
+      res.status(500).json({ 
+        error: "Error during login", 
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined 
+      });
     }
   });
 
