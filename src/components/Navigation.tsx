@@ -18,13 +18,12 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
     "members",
     "chat",
     "contacts",
-    "tasks",
+    "achievements",
     "discover",
     "spots",
     "cruise",
     "reminders",
     "leaderboard",
-    "achievements",
     "profile",
     "studio",
   ] as const;
@@ -41,7 +40,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
               : "text-slate-500 hover:text-slate-300"
           }`}
         >
-          {tab === "reminders" ? "Events" : tab}
+          {tab === "reminders" ? "Events" : tab === "achievements" ? "Achievements" : tab}
         </button>
       ))}
     </div>
