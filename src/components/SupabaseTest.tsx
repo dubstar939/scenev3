@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { createClient } from '../utils/supabase/client';
 
 export default function SupabaseTest() {
-  const [todos, setTodos] = useState<any[]>([]);
+  const [spots, setSpots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
@@ -12,17 +12,17 @@ export default function SupabaseTest() {
   useEffect(() => {
     let mounted = true;
     
-    async function fetchTodos() {
+    async function fetchSpots() {
       try {
-        const { data, error: fetchError } = await supabase.from('todos').select();
+        const { data, error: fetchError } = await supabase.from('spots').select();
         
         if (!mounted) return;
         
         if (fetchError) {
-          console.error('Error fetching todos:', fetchError);
+          console.error('Error fetching spots:', fetchError);
           setError(fetchError.message);
         } else {
-          setTodos(data || []);
+          setSpots(data || []);
         }
       } catch (err) {
         if (!mounted) return;
@@ -35,7 +35,7 @@ export default function SupabaseTest() {
       }
     }
 
-    fetchTodos();
+    fetchSpots();
     
     return () => {
       mounted = false;
@@ -57,6 +57,7 @@ export default function SupabaseTest() {
       <div className="p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
         <h2 className="text-xl font-bold text-red-400 mb-2">Connection Error</h2>
         <p className="text-red-300 text-sm">{error}</p>
+        <p className="text-red-300 text-xs mt-2">Make sure the 'spots' table exists in your Supabase database.</p>
       </div>
     );
   }
@@ -68,16 +69,16 @@ export default function SupabaseTest() {
         Supabase Connected
       </h2>
       <ul className="space-y-2">
-        {todos.map((todo) => (
-          <li key={todo.id} className="text-slate-300 flex items-center gap-2">
+        {spots.map((spot) => (
+          <li key={spot.id} className="text-slate-300 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
-            {todo.name}
+            {spot.name} ({spot.type})
           </li>
         ))}
-        {todos.length === 0 && (
+        {spots.length === 0 && (
           <li className="text-slate-500 italic flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
-            No todos found.
+            No spots found. Create one on the map!
           </li>
         )}
       </ul>
