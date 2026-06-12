@@ -57,7 +57,7 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
             Scene
           </h1>
           <p className="text-xs text-slate-500 font-bold uppercase tracking-[0.3em]">
-            Panhandle Pop-Up Meets
+            Car Meet Community
           </p>
         </div>
 
