@@ -19,7 +19,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
     "chat",
     "contacts",
     "achievements",
-    "discover",
     "spots",
     "cruise",
     "reminders",

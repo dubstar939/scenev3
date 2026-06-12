@@ -344,7 +344,6 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     | "members"
     | "chat"
-    | "discover"
     | "privacy"
     | "cruise"
     | "reminders"
@@ -356,7 +355,7 @@ const App: React.FC = () => {
     | "contacts"
   >("members");
 
-  const isMapTab = ["members", "spots", "cruise", "discover"].includes(activeTab);
+  const isMapTab = ["members", "spots", "cruise"].includes(activeTab);
 
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -373,16 +372,47 @@ const App: React.FC = () => {
   const [locationError, setLocationError] = useState<string | null>(null);
 
   // Spots State
-  const [spots, setSpots] = useState<Spot[]>(() => {
-    const saved = localStorage.getItem("scene_spots");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [spots, setSpots] = useState<Spot[]>([]);
   const [isAddingSpot, setIsAddingSpot] = useState(false);
   const [newSpotForm, setNewSpotForm] = useState<Partial<Spot>>({
     name: "",
     type: "Meetup",
     description: "",
   });
+
+  // Load spots from Supabase on mount
+  useEffect(() => {
+    async function loadSpots() {
+      // First load from localStorage for quick display
+      const saved = localStorage.getItem("scene_spots");
+      if (saved) {
+        setSpots(JSON.parse(saved));
+      }
+      
+      // Then fetch from Supabase
+      const { data, error } = await supabase
+        .from('spots')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (!error && data) {
+        const loadedSpots: Spot[] = data.map(row => ({
+          id: row.id,
+          name: row.name,
+          type: row.type as Spot["type"],
+          location: [row.latitude, row.longitude] as [number, number],
+          description: row.description,
+          imageUrl: row.image_url,
+          createdBy: row.created_by,
+          createdAt: row.created_at,
+        }));
+        setSpots(loadedSpots);
+        localStorage.setItem("scene_spots", JSON.stringify(loadedSpots));
+      }
+    }
+    
+    loadSpots();
+  }, []);
 
   // Profile Edit State
   const [profileForm, setProfileForm] = useState({
@@ -1573,7 +1603,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSaveSpot = () => {
+  const handleSaveSpot = async () => {
     if (!newSpotForm.name || !newSpotForm.location || !currentUser) return;
 
     const spot: Spot = {
@@ -1586,6 +1616,27 @@ const App: React.FC = () => {
       createdBy: currentUser.id,
       createdAt: new Date().toISOString(),
     };
+
+    // Save to Supabase
+    const { error: supabaseError } = await supabase
+      .from('spots')
+      .insert([{
+        name: spot.name,
+        type: spot.type,
+        latitude: spot.location[0],
+        longitude: spot.location[1],
+        description: spot.description,
+        image_url: spot.imageUrl,
+        created_by: spot.createdBy,
+        created_at: spot.createdAt,
+      }]);
+
+    if (supabaseError) {
+      console.error('Error saving spot to Supabase:', supabaseError);
+      setShareFeedback("Error saving spot. Please try again.");
+      setTimeout(() => setShareFeedback(null), 3000);
+      return;
+    }
 
     const updatedSpots = [...spots, spot];
     setSpots(updatedSpots);
@@ -1605,7 +1656,18 @@ const App: React.FC = () => {
     setTimeout(() => setShareFeedback(null), 3000);
   };
 
-  const handleDeleteSpot = (id: string) => {
+  const handleDeleteSpot = async (id: string) => {
+    // Delete from Supabase
+    const { error: supabaseError } = await supabase
+      .from('spots')
+      .delete()
+      .eq('id', id);
+
+    if (supabaseError) {
+      console.error('Error deleting spot from Supabase:', supabaseError);
+      return;
+    }
+
     const updatedSpots = spots.filter((s) => s.id !== id);
     setSpots(updatedSpots);
     localStorage.setItem("scene_spots", JSON.stringify(updatedSpots));
