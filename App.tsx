@@ -712,7 +712,7 @@ const App: React.FC = () => {
     if (isLoggedIn && currentUser) {
       const groupChat: Conversation = {
         id: "group",
-        name: "Panhandle Pop-Up Meets",
+        name: "Community Chat",
         avatar: "https://placehold.co/100x100/3730a3/FFFFFF?text=P",
         participants: [currentUser],
         messages: [],
@@ -2190,7 +2190,7 @@ const App: React.FC = () => {
                 )}
               </div>
               <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-[0.3em]">
-                Panhandle Pop-Up Meets
+                Car Meet Community
               </p>
             </div>
             <div className="flex gap-2">
