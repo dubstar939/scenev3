@@ -362,12 +362,10 @@ const App: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskFilters, setTaskFilters] = useState<{
-    hauler: string;
     priority: string;
     status: string;
     dateRange: { start: string; end: string };
   }>({
-    hauler: "",
     priority: "",
     status: "",
     dateRange: { start: "", end: "" },
@@ -1375,11 +1373,10 @@ const App: React.FC = () => {
   const handleAddTask = () => {
     const newTask: Task = {
       id: `task-${Date.now()}`,
-      title: "New Task " + (tasks.length + 1),
-      description: "Sample task description",
+      title: "New Achievement " + (tasks.length + 1),
+      description: "Sample achievement description",
       priority: (["low", "medium", "high"] as const)[Math.floor(Math.random() * 3)],
       status: "pending",
-      hauler: (["Hauler A", "Hauler B", "Hauler C"] as const)[Math.floor(Math.random() * 3)],
       createdAt: new Date().toISOString(),
     };
     setTasks((prev) => [newTask, ...prev]);
@@ -1425,7 +1422,6 @@ const App: React.FC = () => {
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
-      const matchesHauler = !taskFilters.hauler || task.hauler?.toLowerCase().includes(taskFilters.hauler.toLowerCase());
       const matchesPriority = !taskFilters.priority || task.priority === taskFilters.priority;
       const matchesStatus = !taskFilters.status || task.status === taskFilters.status;
       
@@ -1444,7 +1440,7 @@ const App: React.FC = () => {
         }
       }
 
-      return matchesHauler && matchesPriority && matchesStatus && matchesDate;
+      return matchesPriority && matchesStatus && matchesDate;
     });
   }, [tasks, taskFilters]);
   /**
