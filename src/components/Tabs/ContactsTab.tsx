@@ -48,7 +48,7 @@ const ContactsTab: React.FC<ContactsTabProps> = ({ contacts, handleCSVImport }) 
               <div>
                 <h4 className="text-white font-bold">{contact.name}</h4>
                 <p className="text-slate-500 text-xs">{contact.email}</p>
-                {contact.hauler && <p className="text-indigo-400 text-[10px] uppercase font-black mt-1">{contact.hauler}</p>}
+                {contact.company && <p className="text-indigo-400 text-[10px] uppercase font-black mt-1">{contact.company}</p>}
               </div>
               <div className="text-right text-[10px] text-slate-600 uppercase font-bold">
                 {new Date(contact.createdAt).toLocaleDateString()}

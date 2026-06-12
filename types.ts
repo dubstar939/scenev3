@@ -75,7 +75,6 @@ export interface Contact {
   email: string;
   phone?: string;
   company?: string;
-  hauler?: string;
   createdAt: string;
 }
 
@@ -85,7 +84,6 @@ export interface Task {
   description: string;
   priority: 'low' | 'medium' | 'high';
   status: 'pending' | 'in-progress' | 'completed';
-  hauler?: string;
   createdAt: string;
   dueDate?: string;
 }

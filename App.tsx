@@ -86,7 +86,7 @@ import {
 import { GoogleGenAI } from "@google/genai";
 import { supabase } from "./src/lib/supabase";
 import ContactsTab from "./src/components/Tabs/ContactsTab";
-import TasksTab from "./src/components/Tabs/TasksTab";
+import AchievementsTab from "./src/components/Tabs/TasksTab";
 import NavigationComponent from "./src/components/Navigation";
 import SupabaseTest from "./src/components/SupabaseTest";
 
@@ -354,7 +354,6 @@ const App: React.FC = () => {
     | "leaderboard"
     | "achievements"
     | "contacts"
-    | "tasks"
   >("members");
 
   const isMapTab = ["members", "spots", "cruise", "discover"].includes(activeTab);
@@ -1408,7 +1407,6 @@ const App: React.FC = () => {
           email: row.email || row.Email || "",
           phone: row.phone || row.Phone || "",
           company: row.company || row.Company || "",
-          hauler: row.hauler || row.Hauler || "",
           createdAt: new Date().toISOString(),
         }));
         setContacts((prev) => [...prev, ...importedContacts]);
@@ -2270,12 +2268,12 @@ const App: React.FC = () => {
               contacts={contacts} 
               handleCSVImport={handleCSVImport} 
             />
-          ) : activeTab === "tasks" ? (
-            <TasksTab 
-              filteredTasks={filteredTasks} 
-              taskFilters={taskFilters} 
-              setTaskFilters={setTaskFilters} 
-              handleAddTask={handleAddTask} 
+          ) : activeTab === "achievements" ? (
+            <AchievementsTab 
+              filteredAchievements={filteredTasks} 
+              achievementFilters={taskFilters} 
+              setAchievementFilters={setTaskFilters} 
+              handleAddAchievement={handleAddTask} 
             />
           ) : activeTab === "discover" ? (
             <div className="space-y-6 animate-in fade-in duration-300">
