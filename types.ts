@@ -37,6 +37,15 @@ export interface Member {
   achievements: Achievement[];
   photosShared: number;
   checkpointsVisited: string[];
+  bio?: string;
+  socialLinks?: {
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+    tiktok?: string;
+    youtube?: string;
+  };
+  carPhotos?: string[];
 }
 
 export interface Spot {
@@ -128,4 +137,12 @@ export interface Reminder {
   alertFired?: boolean;
   recurring?: 'none' | 'daily' | 'weekly' | 'monthly';
   alertSound?: 'default' | 'engine' | 'turbo' | 'horn';
+  flyerUrl?: string;
+  socialLinks?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+    website?: string;
+  };
 }
