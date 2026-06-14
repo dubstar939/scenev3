@@ -11,6 +11,16 @@ import { supabaseMiddleware } from "../src/utils/supabase/middleware";
 
 import { createClient } from "@supabase/supabase-js";
 
+// Define the User type for Supabase
+interface UserRow {
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  avatar?: string | null;
+  car?: string | null;
+}
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -119,7 +129,7 @@ async function startServer() {
       try {
         const { error } = await supabase
           .from('users')
-          .upsert({
+          .upsert<UserRow>({
             id: user.id,
             email: user.email,
             password: user.password,
@@ -158,10 +168,11 @@ async function startServer() {
           .eq('email', email)
           .single();
         
-        if (data) {
-          registeredUsers.set(data.id, data); // Cache it
-          emailToId.set(email, data.id);
-          return data;
+        if (data && typeof data === 'object' && 'id' in data) {
+          const userData = data as UserRow;
+          registeredUsers.set(userData.id, userData); // Cache it
+          emailToId.set(email, userData.id);
+          return userData;
         }
       } catch (err: any) {
         console.error("Supabase fetch error:", err.message || err.details || err);
