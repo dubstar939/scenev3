@@ -41,7 +41,7 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
   if (isLoggedIn) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-full p-6 md:p-12 bg-[#020617] relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-full p-6 md:p-12 bg-[#020617] relative overflow-hidden" style={{ backgroundImage: "url('/Scenesp.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
       {/* Background Glows */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 blur-[120px] rounded-full"></div>
@@ -56,9 +56,6 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
           <h1 className="text-5xl font-black italic uppercase text-white tracking-tighter">
             Scene
           </h1>
-          <p className="text-xs text-slate-500 font-bold uppercase tracking-[0.3em]">
-            Car Meet Community
-          </p>
         </div>
 
         {loginMode === "initial" ? (
