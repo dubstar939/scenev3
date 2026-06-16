@@ -90,6 +90,8 @@ import ContactsTab from "./src/components/Tabs/ContactsTab";
 import AchievementsTab from "./src/components/Tabs/TasksTab";
 import NavigationComponent from "./src/components/Navigation";
 import SupabaseTest from "./src/components/SupabaseTest";
+import HazardReportingPanel, { HazardReport } from "./src/components/HazardReportingPanel";
+import FuelPriceTracker, { FuelStation } from "./src/components/FuelPriceTracker";
 
 // Custom Member Map Icon based on status
 const createMemberMapIcon = (member: Member, isLeader: boolean = false) => {
@@ -747,6 +749,9 @@ const App: React.FC = () => {
   const lastLocationRef = useRef<[number, number] | null>(null);
   const socketRef = useRef<RealtimeChannel | null>(null);
   const [isAddingWaypoint, setIsAddingWaypoint] = useState(false);
+  const [showHazardReporter, setShowHazardReporter] = useState(false);
+  const [showFuelTracker, setShowFuelTracker] = useState(false);
+  const [hazardReports, setHazardReports] = useState<HazardReport[]>([]);
 
   const STATUS_OPTIONS: Member["status"][] = [
     "Cruising",
@@ -3165,6 +3170,24 @@ const App: React.FC = () => {
                 </button>
               </div>
 
+              {/* Quick Actions */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setShowHazardReporter(true)}
+                  className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex flex-col items-center gap-2 text-red-400 hover:bg-red-500/20 transition-all"
+                >
+                  <AlertTriangle size={24} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Report Hazard</span>
+                </button>
+                <button
+                  onClick={() => setShowFuelTracker(true)}
+                  className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex flex-col items-center gap-2 text-orange-400 hover:bg-orange-500/20 transition-all"
+                >
+                  <Fuel size={24} />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Fuel Prices</span>
+                </button>
+              </div>
+
               {/* Cruise Location Sharing */}
               {cruise.isActive && (
                 <button
@@ -3854,6 +3877,46 @@ const App: React.FC = () => {
         userMarkerIcon={userMarkerIcon}
         CruisePolyline={CruisePolyline}
       />
+
+      {/* Hazard Reporter Modal */}
+      {showHazardReporter && (
+        <HazardReportingPanel
+          currentUserLocation={currentUserLocation}
+          currentUser={currentUser}
+          onSubmitReport={(report) => {
+            setHazardReports(prev => [...prev, report]);
+            // Award XP for reporting hazards
+            addXp(50);
+            setShareFeedback("Hazard reported! +50 XP");
+            setTimeout(() => setShareFeedback(null), 3000);
+            
+            // Broadcast to other users via socket
+            if (socketRef.current) {
+              socketRef.current.send({
+                type: "broadcast",
+                event: "new_hazard",
+                payload: report,
+              });
+            }
+          }}
+          onClose={() => setShowHazardReporter(false)}
+        />
+      )}
+
+      {/* Fuel Price Tracker Modal */}
+      {showFuelTracker && (
+        <FuelPriceTracker
+          currentUserLocation={currentUserLocation}
+          route={cruise.isActive ? cruise.route : undefined}
+          onSelectStation={(station) => {
+            setMapDisplayCenter(station.location);
+            setShowFuelTracker(false);
+            setShareFeedback(`Navigating to ${station.name}`);
+            setTimeout(() => setShareFeedback(null), 3000);
+          }}
+          onClose={() => setShowFuelTracker(false)}
+        />
+      )}
     </div>
   );
 };

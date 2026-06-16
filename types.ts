@@ -146,3 +146,34 @@ export interface Reminder {
     website?: string;
   };
 }
+
+export interface HazardReport {
+  id: string;
+  type: 'accident' | 'police' | 'roadwork' | 'pothole' | 'weather' | 'traffic' | 'other';
+  location: [number, number];
+  description: string;
+  severity: 'low' | 'medium' | 'high';
+  reportedBy: string;
+  reportedAt: string;
+  upvotes: number;
+  downvotes: number;
+  resolved?: boolean;
+  expiresAt?: string;
+}
+
+export interface FuelStation {
+  id: string;
+  name: string;
+  brand?: string;
+  location: [number, number];
+  address?: string;
+  prices: {
+    regular: number;
+    midGrade?: number;
+    premium?: number;
+    diesel?: number;
+  };
+  lastUpdated: string;
+  distance?: number;
+  amenities?: string[];
+}
