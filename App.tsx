@@ -1140,7 +1140,8 @@ const App: React.FC = () => {
         .on("broadcast", { event: "new_message" }, ({ payload }) => {
           setConversations((prev) =>
             prev.map((c) => {
-              if (c.id === "group") {
+              // Handle both group chat and DM conversations
+              if (c.id === "group" || c.id === payload.conversationId) {
                 if (c.messages.some((m) => m.id === payload.id)) return c;
                 return { ...c, messages: [...c.messages, payload] };
               }
@@ -1758,6 +1759,7 @@ const App: React.FC = () => {
         minute: "2-digit",
       }),
       isRead: false,
+      conversationId: activeConversationId,
     };
 
     if (socketRef.current) {
@@ -2372,7 +2374,29 @@ const App: React.FC = () => {
           {activeTab === "contacts" ? (
             <ContactsTab 
               contacts={contacts} 
-              handleCSVImport={handleCSVImport} 
+              appContacts={appContacts}
+              isLoading={isLoadingContacts}
+              handleCSVImport={handleCSVImport}
+              onRemoveContact={async (userId: string) => {
+                await chatService.removeContact(userId);
+                setAppContacts(prev => prev.filter(c => c.userContactId !== userId));
+              }}
+              onStartDM={(userId: string, userName: string) => {
+                const existing = conversations.find((c) => c.id === userId);
+                if (!existing && currentUser) {
+                  const newDM: Conversation = {
+                    id: userId,
+                    name: userName,
+                    avatar: "https://placehold.co/100x100/3730a3/FFFFFF?text=?",
+                    participants: [currentUser],
+                    messages: [],
+                    unreadCount: 0,
+                  };
+                  setConversations((prev) => [...prev, newDM]);
+                }
+                setActiveConversationId(userId);
+                setActiveTab("chat");
+              }}
             />
           ) : activeTab === "achievements" ? (
             <AchievementsTab 
