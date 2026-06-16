@@ -1,10 +1,7 @@
-```
-# Dependencies
-node_modules/
-
-# Build artifacts
-dist/
-
-# Vite cache
-.node_modules/.vite/
-```
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.webm
