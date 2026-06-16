@@ -183,3 +183,107 @@ CREATE TRIGGER update_messages_updated_at
 INSERT INTO public.conversations (type, name, avatar)
 VALUES ('general', 'Community Chat', 'https://placehold.co/100x100/3730a3/FFFFFF?text=P')
 ON CONFLICT DO NOTHING;
+
+-- ============================================
+-- USER CONTACTS TABLE
+-- Allows users to add other app members as contacts
+-- ============================================
+
+CREATE TABLE IF NOT EXISTS public.user_contacts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  contact_user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, contact_user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_contacts_user_id ON public.user_contacts(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_contacts_contact_user_id ON public.user_contacts(contact_user_id);
+
+ALTER TABLE public.user_contacts ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own contacts"
+  ON public.user_contacts FOR SELECT
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can add contacts"
+  ON public.user_contacts FOR INSERT
+  WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can remove their own contacts"
+  ON public.user_contacts FOR DELETE
+  USING (user_id = auth.uid());
+
+-- Function to check if a user is already a contact
+CREATE OR REPLACE FUNCTION public.is_contact(check_user_id UUID, target_user_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.user_contacts
+    WHERE user_id = check_user_id AND contact_user_id = target_user_id
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to add a contact
+CREATE OR REPLACE FUNCTION public.add_contact(target_user_id UUID)
+RETURNS UUID AS $$
+DECLARE
+  new_contact_id UUID;
+BEGIN
+  -- Prevent adding yourself
+  IF target_user_id = auth.uid() THEN
+    RAISE EXCEPTION 'Cannot add yourself as a contact';
+  END IF;
+  
+  -- Check if already exists
+  IF public.is_contact(auth.uid(), target_user_id) THEN
+    RAISE EXCEPTION 'User is already in your contacts';
+  END IF;
+  
+  INSERT INTO public.user_contacts (user_id, contact_user_id)
+  VALUES (auth.uid(), target_user_id)
+  RETURNING id INTO new_contact_id;
+  
+  RETURN new_contact_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to remove a contact
+CREATE OR REPLACE FUNCTION public.remove_contact(target_user_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  DELETE FROM public.user_contacts
+  WHERE user_id = auth.uid() AND contact_user_id = target_user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Function to get all contacts for current user with profile info
+CREATE OR REPLACE FUNCTION public.get_user_contacts()
+RETURNS TABLE (
+  contact_id UUID,
+  user_contact_id UUID,
+  name TEXT,
+  avatar TEXT,
+  email TEXT,
+  car TEXT,
+  status TEXT,
+  added_at TIMESTAMP WITH TIME ZONE
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    uc.id AS contact_id,
+    uc.contact_user_id AS user_contact_id,
+    p.name::TEXT,
+    p.avatar::TEXT,
+    p.email::TEXT,
+    p.car::TEXT,
+    p.status::TEXT,
+    uc.created_at AS added_at
+  FROM public.user_contacts uc
+  JOIN public.profiles p ON p.id = uc.contact_user_id
+  WHERE uc.user_id = auth.uid()
+  ORDER BY uc.created_at DESC;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
