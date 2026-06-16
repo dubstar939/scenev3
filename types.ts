@@ -106,6 +106,7 @@ export interface Message {
   timestamp: string;
   isRead?: boolean;
   reactions?: { [emoji: string]: string[] }; // emoji -> list of userIds
+  conversationId?: string;
 }
 
 export interface Conversation {
