@@ -1,7 +1,10 @@
-Nothing should be ignored based on the provided file changes. The changes consist of:
-- An added image file (`public/Scenesp.png`)
-- Deleted files/folders (`Scenesp.png`, `src/assets`)
+```
+# Dependencies
+node_modules/
 
-Since the changes only involve source/config files and images (not build artifacts, dependencies, or temporary files), no new ignore rules are needed. The existing `.gitignore` content is empty, so there are no existing rules to preserve.
+# Build artifacts
+dist/
 
-Therefore, the output is empty.
+# Vite cache
+.node_modules/.vite/
+```
