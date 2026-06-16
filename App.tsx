@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   MapContainer,
   TileLayer,
@@ -92,6 +93,7 @@ import NavigationComponent from "./src/components/Navigation";
 import SupabaseTest from "./src/components/SupabaseTest";
 import HazardReportingPanel, { HazardReport } from "./src/components/HazardReportingPanel";
 import FuelPriceTracker, { FuelStation } from "./src/components/FuelPriceTracker";
+import { useDebounce } from "./src/hooks/useDebounce";
 
 // Custom Member Map Icon based on status
 const createMemberMapIcon = (member: Member, isLeader: boolean = false) => {
@@ -650,7 +652,9 @@ const App: React.FC = () => {
 
   // Discover/Search States
   const [discoverSearchQuery, setDiscoverSearchQuery] = useState("");
+  const debouncedDiscoverSearch = useDebounce(discoverSearchQuery, 300);
   const [memberSearchQuery, setMemberSearchQuery] = useState("");
+  const debouncedMemberSearch = useDebounce(memberSearchQuery, 300);
   const [memberStatusFilter, setMemberStatusFilter] = useState("All");
   const [memberCarFilter, setMemberCarFilter] = useState("All");
 
@@ -686,6 +690,7 @@ const App: React.FC = () => {
   >(null);
   const [messageInput, setMessageInput] = useState("");
   const [chatSearchQuery, setChatSearchQuery] = useState("");
+  const debouncedChatSearch = useDebounce(chatSearchQuery, 300);
   const [reactionPickerMessageId, setReactionPickerMessageId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);

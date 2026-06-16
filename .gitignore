@@ -1,20 +1,12 @@
 ```
-# Build artifacts
-dist/
-build/
-
 # Dependencies
 node_modules/
 
-# Editors
-.vscode/
+# Package lock files
+package-lock.json
 
-# Compiled files
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
+# Environment
+.env
+.env.local
+*.env.*
 ```
