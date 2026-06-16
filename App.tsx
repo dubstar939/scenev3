@@ -85,6 +85,7 @@ import {
 } from "./types";
 import { GoogleGenAI } from "@google/genai";
 import { supabase } from "./src/lib/supabase";
+import { chatService } from "./src/services/chatService";
 import ContactsTab from "./src/components/Tabs/ContactsTab";
 import AchievementsTab from "./src/components/Tabs/TasksTab";
 import NavigationComponent from "./src/components/Navigation";
@@ -358,6 +359,17 @@ const App: React.FC = () => {
   const isMapTab = ["members", "spots", "cruise"].includes(activeTab);
 
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [appContacts, setAppContacts] = useState<Array<{
+    contactId: string;
+    userContactId: string;
+    name: string;
+    avatar: string;
+    email: string;
+    car: string;
+    status: string;
+    addedAt: string;
+  }>>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskFilters, setTaskFilters] = useState<{
     priority: string;
@@ -413,6 +425,28 @@ const App: React.FC = () => {
     
     loadSpots();
   }, []);
+
+  // Load app contacts when user is logged in
+  useEffect(() => {
+    async function loadAppContacts() {
+      if (!currentUser) {
+        setAppContacts([]);
+        return;
+      }
+
+      setIsLoadingContacts(true);
+      try {
+        const contacts = await chatService.getContacts();
+        setAppContacts(contacts);
+      } catch (error) {
+        console.error('Error loading contacts:', error);
+      } finally {
+        setIsLoadingContacts(false);
+      }
+    }
+
+    loadAppContacts();
+  }, [currentUser]);
 
   // Profile Edit State
   const [profileForm, setProfileForm] = useState({

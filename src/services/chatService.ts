@@ -264,4 +264,71 @@ export const chatService = {
       payload: { conversationId, userId, isTyping },
     });
   },
+
+  // User Contacts Management
+  async addContact(targetUserId: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { data, error } = await supabase.rpc('add_contact', { target_user_id: targetUserId });
+      if (error) throw error;
+      return { success: true };
+    } catch (error: any) {
+      console.error('Error adding contact:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Failed to add contact' 
+      };
+    }
+  },
+
+  async removeContact(targetUserId: string): Promise<void> {
+    try {
+      await supabase.rpc('remove_contact', { target_user_id: targetUserId });
+    } catch (error) {
+      console.error('Error removing contact:', error);
+    }
+  },
+
+  async getContacts(): Promise<Array<{
+    contactId: string;
+    userContactId: string;
+    name: string;
+    avatar: string;
+    email: string;
+    car: string;
+    status: string;
+    addedAt: string;
+  }>> {
+    try {
+      const { data, error } = await supabase.rpc('get_user_contacts');
+      if (error) throw error;
+      
+      return (data || []).map((contact: any) => ({
+        contactId: contact.contact_id,
+        userContactId: contact.user_contact_id,
+        name: contact.name || 'Unknown',
+        avatar: contact.avatar || 'https://placehold.co/100x100/3730a3/FFFFFF?text=?',
+        email: contact.email || '',
+        car: contact.car || '',
+        status: contact.status || 'Offline',
+        addedAt: contact.added_at,
+      }));
+    } catch (error) {
+      console.error('Error getting contacts:', error);
+      return [];
+    }
+  },
+
+  async isContact(targetUserId: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('is_contact', { 
+        check_user_id: (await supabase.auth.getUser()).data.user?.id,
+        target_user_id: targetUserId 
+      });
+      if (error) throw error;
+      return data || false;
+    } catch (error) {
+      console.error('Error checking contact:', error);
+      return false;
+    }
+  },
 };
