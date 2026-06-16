@@ -41,7 +41,7 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
   if (isLoggedIn) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-full p-6 md:p-12 bg-[#020617] relative overflow-hidden" style={{ backgroundImage: "url('/Scenesp.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+    <div className="flex flex-col items-center justify-center min-h-full p-6 md:p-12 bg-[#020617] relative overflow-hidden">
       {/* Background Glows */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-600/20 blur-[120px] rounded-full"></div>
@@ -49,11 +49,14 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
       </div>
 
       <div className="w-full max-w-md z-10 space-y-8 animate-in fade-in zoom-in duration-700">
-        <div className="text-center space-y-2">
-          <div className="inline-flex p-4 bg-indigo-600/10 rounded-[2rem] border border-indigo-500/20 mb-4">
-            <LogIn size={40} className="text-indigo-500" />
-          </div>
-          <h1 className="text-5xl font-black italic uppercase text-white tracking-tighter">
+        <div className="text-center space-y-4">
+          {/* Subtle Brand Logo */}
+          <img 
+            src="/src/scenelogo.png" 
+            alt="Scene Logo" 
+            className="h-16 md:h-20 w-auto object-contain mx-auto opacity-90 drop-shadow-lg"
+          />
+          <h1 className="text-4xl font-black italic uppercase text-white tracking-tighter">
             Scene
           </h1>
         </div>
