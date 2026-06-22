@@ -6,8 +6,9 @@ import {
   Popup,
 } from "react-leaflet";
 import L from "leaflet";
-import { Car, MessageSquare, Navigation, Trash2, Eye, Ghost, Maximize2 } from "lucide-react";
+import { Car, MessageSquare, Navigation, Trash2, Eye, Ghost, Maximize2, Smartphone } from "lucide-react";
 import { Member, Spot } from "../types";
+import SmoothPanComponent from "../hooks/useSmoothPan";
 
 interface MapComponentProps {
   center: [number, number];
@@ -36,6 +37,8 @@ interface MapComponentProps {
   createMemberMapIcon: (member: Member, isLeader?: boolean) => L.DivIcon;
   userMarkerIcon: L.DivIcon;
   CruisePolyline: React.FC<{ route: [number, number][] }>;
+  isAndroidAuto?: boolean;
+  isDrivingMode?: boolean;
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
@@ -65,11 +68,20 @@ const MapComponent: React.FC<MapComponentProps> = ({
   createMemberMapIcon,
   userMarkerIcon,
   CruisePolyline,
+  isAndroidAuto = false,
+  isDrivingMode = false,
 }) => {
   const DEFAULT_AVATAR = "https://i.pravatar.cc/150?u=default";
+  
+  // Automotive mode optimizations
+  const isAutomotiveMode = isAndroidAuto || isDrivingMode;
+  const touchTargetSize = isAutomotiveMode ? "min-h-[56px] min-w-[56px]" : "";
+  const fontSize = isAutomotiveMode ? "text-base" : "text-sm";
 
   return (
     <div className={`flex-1 relative ${isMapTab ? "h-[55%]" : "h-[15%]"} md:h-full order-1 md:order-2 transition-all duration-500`}>
+      {/* Smooth Pan Animation */}
+      <SmoothPanComponent center={center} zoom={13} duration={800} easing="easeOutCubic" />
       {/* Map Layer Controls */}
       {isMapTab ? (
         <div className="absolute top-6 right-6 z-[1000] flex flex-col gap-2">
