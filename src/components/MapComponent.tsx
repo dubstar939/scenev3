@@ -69,7 +69,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const DEFAULT_AVATAR = "https://i.pravatar.cc/150?u=default";
 
   return (
-    <div className={`flex-1 relative ${isMapTab ? "h-[55%]" : "h-[15%]"} md:h-full order-1 md:order-2 transition-all duration-500`}>
+    <div className={`flex-1 relative ${isMapTab ? "h-[60%]" : "h-[15%]"} md:h-full order-1 md:order-2 transition-all duration-500`}>
       {/* Map Layer Controls */}
       {isMapTab ? (
         <div className="absolute top-6 right-6 z-[1000] flex flex-col gap-2">

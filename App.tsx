@@ -2298,24 +2298,24 @@ const App: React.FC = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab("profile")}
-                className={`p-2 rounded-lg transition-colors ${activeTab === "profile" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
+                className={`p-3 min-w-[48px] min-h-[48px] rounded-xl transition-colors touch-feedback ${activeTab === "profile" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
                 title="Edit Profile"
               >
-                <Settings size={18} />
+                <Settings size={20} />
               </button>
               <button
                 onClick={() => setActiveTab("privacy")}
-                className={`p-2 rounded-lg transition-colors ${activeTab === "privacy" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
+                className={`p-3 min-w-[48px] min-h-[48px] rounded-xl transition-colors touch-feedback ${activeTab === "privacy" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
                 title="Privacy Settings"
               >
-                <Shield size={18} />
+                <Shield size={20} />
               </button>
               <button
                 onClick={handleLogout}
-                className="p-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20"
+                className="p-3 min-w-[48px] min-h-[48px] bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 touch-feedback"
                 title="Logout"
               >
-                <LogOut size={18} />
+                <LogOut size={20} />
               </button>
             </div>
           </div>
@@ -2507,9 +2507,9 @@ const App: React.FC = () => {
               {/* Broadcast Location Button */}
               <button
                 onClick={() => handleShareLocation("group")}
-                className="w-full flex items-center justify-center gap-3 p-4 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 rounded-[2rem] font-black uppercase text-[10px] tracking-widest hover:bg-indigo-600/20 transition-all active:scale-[0.98] mb-2 shadow-lg shadow-indigo-500/5"
+                className="w-full flex items-center justify-center gap-3 p-4 min-h-[56px] bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 rounded-[2rem] font-black uppercase text-sm tracking-widest hover:bg-indigo-600/20 transition-all active:scale-[0.98] mb-2 shadow-lg shadow-indigo-500/5 touch-feedback"
               >
-                <Share2 size={16} /> Broadcast Location
+                <Share2 size={18} /> Broadcast Location
               </button>
 
               {/* Member Search Bar */}
@@ -2517,27 +2517,27 @@ const App: React.FC = () => {
                 <div className="flex gap-2">
                   <div className="relative flex-1 group">
                     <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-indigo-400 transition-colors">
-                      <Search size={14} />
+                      <Search size={16} />
                     </div>
                     <input
                       type="text"
                       placeholder="Search members..."
                       value={memberSearchQuery}
                       onChange={(e) => setMemberSearchQuery(e.target.value)}
-                      className="w-full bg-slate-800/50 border border-white/5 rounded-2xl py-3 pl-11 pr-4 text-xs outline-none focus:border-indigo-500/50 focus:bg-slate-800 transition-all placeholder:text-slate-600 font-bold"
+                      className="w-full bg-slate-800/50 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-sm outline-none focus:border-indigo-500/50 focus:bg-slate-800 transition-all placeholder:text-slate-600 font-bold min-h-[48px]"
                     />
                     {memberSearchQuery && (
                       <button
                         onClick={() => setMemberSearchQuery("")}
-                        className="absolute inset-y-0 right-4 flex items-center text-slate-500 hover:text-white transition-colors"
+                        className="absolute inset-y-0 right-4 flex items-center text-slate-500 hover:text-white transition-colors min-w-[44px] min-h-[44px] touch-feedback"
                       >
-                        <X size={14} />
+                        <X size={18} />
                       </button>
                     )}
                   </div>
                   <button
                     onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                    className={`px-4 rounded-2xl border transition-all flex items-center gap-2 font-black uppercase text-[10px] tracking-widest ${showOnlyFavorites ? "bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20" : "bg-slate-800/50 border-white/5 text-slate-500 hover:text-slate-300"}`}
+                    className={`px-4 min-h-[48px] rounded-2xl border transition-all flex items-center gap-2 font-black uppercase text-sm tracking-widest touch-feedback ${showOnlyFavorites ? "bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20" : "bg-slate-800/50 border-white/5 text-slate-500 hover:text-slate-300"}`}
                     title={
                       showOnlyFavorites
                         ? "Showing Favorites"
@@ -2545,10 +2545,10 @@ const App: React.FC = () => {
                     }
                   >
                     <Star
-                      size={14}
+                      size={16}
                       fill={showOnlyFavorites ? "currentColor" : "none"}
                     />
-                    <span className="hidden sm:inline">Favs</span>
+                    <span className="hidden sm:inline text-sm">Favs</span>
                   </button>
                 </div>
 
@@ -2556,7 +2556,7 @@ const App: React.FC = () => {
                   <select
                     value={memberStatusFilter}
                     onChange={(e) => setMemberStatusFilter(e.target.value)}
-                    className="flex-1 bg-slate-800/50 border border-white/5 rounded-xl py-2 px-3 text-[10px] font-black uppercase tracking-widest text-slate-400 outline-none focus:border-indigo-500/50 transition-all"
+                    className="flex-1 bg-slate-800/50 border border-white/5 rounded-xl py-3 px-4 text-sm font-black uppercase tracking-widest text-slate-400 outline-none focus:border-indigo-500/50 transition-all min-h-[48px]"
                   >
                     <option value="All">Status: All</option>
                     {uniqueStatuses
@@ -2570,7 +2570,7 @@ const App: React.FC = () => {
                   <select
                     value={memberCarFilter}
                     onChange={(e) => setMemberCarFilter(e.target.value)}
-                    className="flex-1 bg-slate-800/50 border border-white/5 rounded-xl py-2 px-3 text-[10px] font-black uppercase tracking-widest text-slate-400 outline-none focus:border-indigo-500/50 transition-all"
+                    className="flex-1 bg-slate-800/50 border border-white/5 rounded-xl py-3 px-4 text-sm font-black uppercase tracking-widest text-slate-400 outline-none focus:border-indigo-500/50 transition-all min-h-[48px]"
                   >
                     <option value="All">Car: All</option>
                     {uniqueCars
@@ -2656,38 +2656,38 @@ const App: React.FC = () => {
                               </button>
                               <button
                                 onClick={() => handleIndividualShare(m)}
-                                className="p-2 text-slate-500 hover:text-emerald-400 transition-colors"
+                                className="p-3 min-w-[44px] min-h-[44px] text-slate-500 hover:text-emerald-400 transition-colors touch-feedback"
                                 title="Share your location"
                               >
-                                <Share2 size={16} />
+                                <Share2 size={18} />
                               </button>
                               <button
                                 onClick={() => handleStartDM(m)}
-                                className="p-2 text-slate-500 hover:text-indigo-400 transition-colors"
+                                className="p-3 min-w-[44px] min-h-[44px] text-slate-500 hover:text-indigo-400 transition-colors touch-feedback"
                                 title="Send message"
                               >
-                                <MessageSquare size={16} />
+                                <MessageSquare size={18} />
                               </button>
                             </div>
                           </div>
                         </div>
-                        <span className="text-[9px] text-emerald-400 mt-1 flex items-center gap-1 font-black uppercase tracking-wider">
-                            <Navigation size={8} /> {m.status}
+                        <span className="text-sm text-emerald-400 mt-2 flex items-center gap-1.5 font-black uppercase tracking-wider">
+                            <Navigation size={12} /> {m.status}
                           </span>
                         </div>
                       </div>
 
                       {/* Car Details Section */}
                       {m.car && (
-                        <div className="pt-2 border-t border-white/5 flex items-center gap-3">
-                          <div className="p-1.5 bg-indigo-500/10 rounded-lg">
-                            <Car size={12} className="text-indigo-400" />
+                        <div className="pt-3 border-t border-white/5 flex items-center gap-3">
+                          <div className="p-2 bg-indigo-500/10 rounded-xl">
+                            <Car size={14} className="text-indigo-400" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest leading-none mb-0.5">
+                            <p className="text-xs text-slate-600 font-bold uppercase tracking-widest leading-none mb-1">
                               Verified Build
                             </p>
-                            <p className="text-[10px] text-indigo-300 font-black uppercase tracking-tight truncate">
+                            <p className="text-sm text-indigo-300 font-black uppercase tracking-tight truncate">
                               {m.car}
                             </p>
                           </div>
@@ -2709,7 +2709,7 @@ const App: React.FC = () => {
                       .includes(memberSearchQuery.toLowerCase()),
                   ).length === 0 && (
                   <div className="text-center py-10 space-y-2">
-                    <p className="text-slate-600 font-black uppercase text-[10px] tracking-widest">
+                    <p className="text-slate-600 font-black uppercase text-sm tracking-widest">
                       {memberSearchQuery
                         ? `No members matching "${memberSearchQuery}"`
                         : showOnlyFavorites
@@ -2722,7 +2722,7 @@ const App: React.FC = () => {
                           setMemberSearchQuery("");
                           setShowOnlyFavorites(false);
                         }}
-                        className="text-indigo-400 text-[10px] font-black uppercase tracking-widest hover:underline"
+                        className="text-indigo-400 text-sm font-black uppercase tracking-widest hover:underline touch-feedback"
                       >
                         Clear Filters
                       </button>
