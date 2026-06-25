@@ -69,7 +69,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const DEFAULT_AVATAR = "https://i.pravatar.cc/150?u=default";
 
   return (
-    <div className={`flex-1 relative ${isMapTab ? "h-[60%]" : "h-[15%]"} md:h-full order-1 md:order-2 transition-all duration-500`}>
+    <div className={`flex-1 relative ${isMapTab ? "h-[70%]" : "h-[15%]"} md:h-full order-1 md:order-2 transition-all duration-500`}>
       {/* Map Layer Controls */}
       {isMapTab ? (
         <div className="absolute top-6 right-6 z-[1000] flex flex-col gap-2">
@@ -148,7 +148,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
                   <h3 className="font-black italic uppercase text-sm text-white">
                     {spot.name}
                   </h3>
-                  <span className="text-[8px] text-indigo-400 font-black uppercase tracking-widest">
+                  <span className="text-xs text-indigo-400 font-black uppercase tracking-widest">
                     {spot.type} Spot
                   </span>
                 </div>
@@ -163,23 +163,23 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 )}
                 <div className="p-4 space-y-3">
                   {spot.description && (
-                    <p className="text-[10px] text-slate-400 leading-relaxed">
+                    <p className="text-xs text-slate-400 leading-relaxed">
                       {spot.description}
                     </p>
                   )}
                   <div className="flex gap-2">
                     <button
                       onClick={() => setMapDisplayCenter(spot.location)}
-                      className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all min-h-[44px]"
                     >
                       Focus
                     </button>
                     {spot.createdBy === currentUser?.id && (
                       <button
                         onClick={() => handleDeleteSpot(spot.id)}
-                        className="p-2 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-all"
+                        className="p-3 bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500/20 transition-all min-w-[44px] min-h-[44px]"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={18} />
                       </button>
                     )}
                   </div>
@@ -232,8 +232,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
                       <p className="font-black italic uppercase text-xs truncate leading-tight text-white">
                         {m.name}
                       </p>
-                      <span className="text-[8px] text-emerald-400 flex items-center gap-1 font-black uppercase tracking-wider mt-0.5">
-                        <Navigation size={8} className="animate-pulse" />{" "}
+                      <span className="text-xs text-emerald-400 flex items-center gap-1 font-black uppercase tracking-wider mt-0.5">
+                        <Navigation size={10} className="animate-pulse" />{" "}
                         {m.status}
                       </span>
                     </div>
@@ -241,12 +241,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
                   <div className="p-3 space-y-2.5">
                     {m.car && (
                       <div className="flex items-center gap-2 text-indigo-300 bg-indigo-500/10 px-2.5 py-2 rounded-xl border border-indigo-500/20">
-                        <Car size={12} className="text-indigo-400 shrink-0" />
+                        <Car size={14} className="text-indigo-400 shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-[7px] text-slate-500 font-bold uppercase tracking-widest leading-none mb-0.5">
+                          <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest leading-none mb-0.5">
                             Verified Build
                           </p>
-                          <p className="text-[9px] font-black uppercase tracking-tight truncate leading-none">
+                          <p className="text-xs font-black uppercase tracking-tight truncate leading-none">
                             {m.car}
                           </p>
                         </div>
@@ -254,9 +254,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
                     )}
                     <button
                       onClick={() => handleStartDM(m)}
-                      className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl transition-all text-[9px] font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 active:scale-95"
+                      className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 active:scale-95 min-h-[44px]"
                     >
-                      <MessageSquare size={12} />
+                      <MessageSquare size={16} />
                       Send Message
                     </button>
                   </div>

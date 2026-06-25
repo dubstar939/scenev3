@@ -2274,7 +2274,7 @@ const App: React.FC = () => {
         ))}
       </div>
 
-      <div className={`w-full md:w-[400px] flex flex-col border-r border-white/5 bg-slate-900/60 backdrop-blur-3xl z-[1000] ${isMapTab ? "h-[45%]" : "h-[85%]"} md:h-full shadow-2xl overflow-hidden order-2 md:order-1 transition-all duration-500`}>
+      <div className={`w-full md:w-[400px] flex flex-col border-r border-white/5 bg-slate-900/60 backdrop-blur-3xl z-[1000] ${isMapTab ? "h-[30%]" : "h-[85%]"} md:h-full shadow-2xl overflow-hidden order-2 md:order-1 transition-all duration-500`}>
         <div className="p-4 md:p-8 border-b border-white/5">
           <div className="flex items-center justify-between mb-4">
             <div>
