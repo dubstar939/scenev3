@@ -1,0 +1,39 @@
+/* Global App Styles */
+
+/* Logo Watermark Background Wallpaper */
+#root::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/scenelogo4.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure all content is above the watermark */
+#root > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark mode adjustments for better watermark visibility */
+@media (prefers-color-scheme: dark) {
+  #root::before {
+    opacity: 0.05;
+  }
+}
+
+/* Mobile optimization - slightly more visible on smaller screens */
+@media (max-width: 768px) {
+  #root::before {
+    opacity: 0.04;
+  }
+}
