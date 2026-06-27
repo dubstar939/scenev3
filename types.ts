@@ -38,6 +38,7 @@ export interface Member {
   photosShared: number;
   checkpointsVisited: string[];
   bio?: string;
+  carClub?: string;
   socialLinks?: {
     instagram?: string;
     facebook?: string;

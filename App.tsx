@@ -457,6 +457,14 @@ const App: React.FC = () => {
     name: "",
     car: "",
     avatar: "",
+    carClub: "",
+    socialLinks: {
+      instagram: "",
+      facebook: "",
+      twitter: "",
+      tiktok: "",
+      youtube: "",
+    },
   });
 
   const [activeNotifications, setActiveNotifications] = useState<Reminder[]>(
@@ -1940,6 +1948,8 @@ const App: React.FC = () => {
       name: profileForm.name || currentUser.name,
       car: profileForm.car,
       avatar: profileForm.avatar || currentUser.avatar,
+      carClub: profileForm.carClub,
+      socialLinks: profileForm.socialLinks,
     };
 
     try {
@@ -1959,6 +1969,8 @@ const App: React.FC = () => {
       const updatedUser: Member = {
         ...currentUser,
         ...updatedUserFromServer,
+        carClub: updatedUserFromServer.car_club,
+        socialLinks: updatedUserFromServer.social_links,
       };
 
       setCurrentUser(updatedUser);
@@ -3771,6 +3783,58 @@ const App: React.FC = () => {
                         placeholder="Year Make Model"
                         className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-all"
                       />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">
+                        Car Club
+                      </label>
+                      <input
+                        type="text"
+                        value={profileForm.carClub}
+                        onChange={(e) =>
+                          setProfileForm({
+                            ...profileForm,
+                            carClub: e.target.value,
+                          })
+                        }
+                        placeholder="Your Car Club Name"
+                        className="w-full bg-slate-800/50 border border-white/5 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">
+                        Social Handles
+                      </label>
+                      <div className="space-y-3">
+                        {[
+                          { key: 'instagram', icon: '📸', placeholder: '@instagram' },
+                          { key: 'facebook', icon: '📘', placeholder: 'Facebook URL' },
+                          { key: 'twitter', icon: '🐦', placeholder: '@twitter' },
+                          { key: 'tiktok', icon: '🎵', placeholder: '@tiktok' },
+                          { key: 'youtube', icon: '📺', placeholder: 'YouTube Channel' },
+                        ].map((social) => (
+                          <div key={social.key} className="flex items-center gap-3">
+                            <span className="text-lg w-6 text-center">{social.icon}</span>
+                            <input
+                              type="text"
+                              value={profileForm.socialLinks[social.key as keyof typeof profileForm.socialLinks]}
+                              onChange={(e) =>
+                                setProfileForm({
+                                  ...profileForm,
+                                  socialLinks: {
+                                    ...profileForm.socialLinks,
+                                    [social.key]: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder={social.placeholder}
+                              className="flex-1 bg-slate-800/50 border border-white/5 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-500 transition-all"
+                            />
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* QR Code Section */}

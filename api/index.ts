@@ -19,6 +19,14 @@ interface UserRow {
   name: string;
   avatar?: string | null;
   car?: string | null;
+  car_club?: string | null;
+  social_links?: {
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+    tiktok?: string;
+    youtube?: string;
+  } | null;
 }
 
 dotenv.config();
@@ -135,7 +143,9 @@ async function startServer() {
             password: user.password,
             name: user.name,
             avatar: user.avatar,
-            car: user.car
+            car: user.car,
+            car_club: user.car_club,
+            social_links: user.social_links
           }, { onConflict: 'email' });
         if (error) throw error;
       } catch (err: any) {
@@ -278,7 +288,7 @@ async function startServer() {
   });
 
   apiRouter.post("/profile/update", async (req, res) => {
-    const { id, name, avatar, car, email: reqEmail } = req.body;
+    const { id, name, avatar, car, carClub, socialLinks, email: reqEmail } = req.body;
     if (!id) {
       return res.status(400).json({ error: "User ID is required" });
     }
@@ -333,7 +343,9 @@ async function startServer() {
         email: email || (user ? user.email : null),
         name: name || (user ? user.name : "New Member"),
         avatar: avatar || (user ? user.avatar : `https://i.pravatar.cc/150?u=${id}`),
-        car: car !== undefined ? car : (user ? user.car : "New Member")
+        car: car !== undefined ? car : (user ? user.car : "New Member"),
+        car_club: carClub !== undefined ? carClub : (user ? user.car_club : null),
+        social_links: socialLinks !== undefined ? socialLinks : (user ? user.social_links : null)
       };
 
       // Ensure we have an email for the record (unless it's a guest, but guests should be in registeredUsers)
